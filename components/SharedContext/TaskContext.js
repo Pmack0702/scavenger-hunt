@@ -19,8 +19,12 @@ export function POIProvider({ children }) {
     );
   }
 
+  const deletePOI = (id) => {
+    setPois((prevPois) => prevPois.filter((poi) => poi.id !== id));
+  }
+
   return (
-    <POIContext.Provider value={{ pois, addPOI, editPOI }}>
+    <POIContext.Provider value={{ pois, addPOI, editPOI, deletePOI }}>
       {children}
     </POIContext.Provider>
   );

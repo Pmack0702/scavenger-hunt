@@ -1,14 +1,18 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import { View, Text, StyleSheet, Button } from 'react-native';
 import { Alert } from 'react-native';
+import { POIContext } from '../components/SharedContext/TaskContext';
 
 
 export default function DetailScreen({ route, navigation }) {
     // const { poi, setPOIs } = route.params; // Retrieve poi and setPOIs from navigation params
 
-  const { poi } = route.params; // Extract the POI object passed via navigation
+  const { poi, setPOIs } = route.params; // Extract the POI object passed via navigation
+
+  const { deletePOI } = useContext(POIContext); // Access the DELETEPOI from POIContext
 
 const handleDeletePOI = () => {
+
     Alert.alert(
       'Confirm Deletion',
       'Are you sure you want to delete this POI?',
@@ -17,7 +21,8 @@ const handleDeletePOI = () => {
         {
           text: 'Delete',
           onPress: () => {
-            setPOIs((prevPOIs) => prevPOIs.filter((item) => item.id !== poi.id)); // Remove POI
+            deletePOI(poi.id); // call the deletePOI from context
+            // setPOIs((prevPOIs) => prevPOIs.filter((item) => item.id !== poi.id)); // Remove POI
             navigation.goBack(); // Return to Home Screen
           },
         },
@@ -42,7 +47,7 @@ const handleDeletePOI = () => {
           title="Delete POI"
           color="red"
           onPress={handleDeletePOI}
-        //   onPress={() => handleDeletePOI(poi.id)}
+          // onPress={() => handleDeletePOI(poi.id)}
         />
 
       <Button title="Back to List" onPress={() => navigation.goBack()} />
