@@ -4,9 +4,9 @@ import { Alert } from 'react-native';
 
 
 export default function DetailScreen({ route, navigation }) {
-    const { poi, setPOIs } = route.params; // Retrieve poi and setPOIs from navigation params
+    // const { poi, setPOIs } = route.params; // Retrieve poi and setPOIs from navigation params
 
-//   const { poi } = route.params; // Extract the POI object passed via navigation
+  const { poi } = route.params; // Extract the POI object passed via navigation
 
 const handleDeletePOI = () => {
     Alert.alert(
@@ -36,7 +36,7 @@ const handleDeletePOI = () => {
       <Text style={styles.text}>{poi.tags.join(', ')}</Text>
       <Text style={styles.label}>Rating:</Text>
 
-      <Button title="Edit POI" onPress={() => navigation.navigate('EditTask', { poi, setPOIs })} />
+      <Button title="Edit POI" onPress={() => navigation.navigate('EditTask', { poi })} />
 
       <Button
           title="Delete POI"

@@ -4,16 +4,16 @@ import data from '../components/data/data';
 import { POIContext } from '../components/SharedContext/TaskContext';
 
 export default function HomeScreen({ navigation }) {
-    const [pois, setPOIs] = useState(mockPOIData); // Manage POI list state
+    // const { poi } = route.params;
 
-    // const { pois } = useContext(POIContext); // Access the shared POI list
+    const { pois } = useContext(POIContext); // Access the shared POI list
 
 
   const renderItem = ({ item }) => (
 
     <TouchableOpacity
       style={styles.item}
-      onPress={() => navigation.navigate('Detail', { poi: item, setPOIs })} // Pass setPOIs to Details Screen
+      onPress={() => navigation.navigate('Detail', { poi: item })} // Pass setPOIs to Details Screen
     >
       <Text style={styles.name}>{item.name}</Text>
       <Text style={styles.details}>
@@ -29,7 +29,7 @@ export default function HomeScreen({ navigation }) {
 
         <Button
         title="Add POI"
-        onPress={() => navigation.navigate('AddTask', { poi: item, setPOIs })}        /> 
+        onPress={() => navigation.navigate('AddTask')}        /> 
       <FlatList
         data={pois}
         renderItem={renderItem}

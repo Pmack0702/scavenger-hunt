@@ -7,12 +7,20 @@ export const POIContext = createContext();
 export function POIProvider({ children }) {
   const [pois, setPois] = useState([]); // Shared POI list state
 
-  const addPOI = (poi) => {
-    setPois((prevPois) => [...prevPois, poi]); // Add new POI to the list
-  };
+    // Function to add a new POI
+    const addPOI = (poi) => {
+        setPois((prevPois) => [...prevPois, poi]); // Add new POI to the list
+    };
+
+  // Function to edit an existing POI
+  const editPOI = (updatedPOI) => {
+    setPois((prevPois) =>
+      prevPois.map((poi) => (poi.id === updatedPOI.id ? updatedPOI : poi))
+    );
+  }
 
   return (
-    <POIContext.Provider value={{ pois, addPOI }}>
+    <POIContext.Provider value={{ pois, addPOI, editPOI }}>
       {children}
     </POIContext.Provider>
   );

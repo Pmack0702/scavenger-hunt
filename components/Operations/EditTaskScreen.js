@@ -1,4 +1,10 @@
+import React, { useContext, useState } from 'react';
+import { POIContext } from '../SharedContext/TaskContext';
+import { View, Text, TextInput, Button, StyleSheet } from 'react-native';
+
+
 export default function EditTaskScreen({ route, navigation }) {
+
     
     const { poi } = route.params;
   
@@ -6,8 +12,11 @@ export default function EditTaskScreen({ route, navigation }) {
     const [address, setAddress] = useState(poi.address);
     const [task, setTask] = useState(poi.task);
     const [tags, setTags] = useState(poi.tags.join(', '));
+
+    const { editPOI } = useContext(POIContext);
+
   
-    const handleSavePOI = () => {
+    const handleSavePOI = () => {   
       const updatedPOI = {
         ...poi,
         name,
@@ -17,7 +26,8 @@ export default function EditTaskScreen({ route, navigation }) {
       };
   
       console.log('POI Updated:', updatedPOI);
-      navigation.goBack(); // Return to the previous screen
+      editPOI(updatedPOI);
+      navigation.navigate('HomeScreen'); // Return to the previous screen
     };
   
     return (
@@ -38,4 +48,39 @@ export default function EditTaskScreen({ route, navigation }) {
       </View>
     );
   }
+
+  const styles = StyleSheet.create({
+    container: {
+      flex: 1,
+      padding: 16,
+      backgroundColor: '#ffffff', // White background for clean look
+    },
+    label: {
+      fontSize: 16,
+      fontWeight: 'bold',
+      color: '#333333', // Dark text color for better readability
+      marginBottom: 8,
+    },
+    input: {
+      borderWidth: 1,
+      borderColor: '#cccccc', // Light gray border
+      borderRadius: 8,
+      padding: 12,
+      fontSize: 16,
+      backgroundColor: '#f9f9f9', // Subtle background color for input fields
+      marginBottom: 16, // Spacing between input fields
+    },
+    button: {
+      marginTop: 16,
+      backgroundColor: '#4CAF50', // Green button color
+      padding: 12,
+      borderRadius: 8,
+    },
+    buttonText: {
+      fontSize: 16,
+      color: '#ffffff', // White text for contrast
+      textAlign: 'center',
+      fontWeight: 'bold',
+    },
+  });
   
