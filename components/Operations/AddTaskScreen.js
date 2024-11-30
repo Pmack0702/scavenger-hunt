@@ -1,6 +1,10 @@
-import React, { useContext, useState } from 'react';
-import { View, Text, TextInput, Button, StyleSheet } from 'react-native';
+import React, { useContext, useState, useEffect } from 'react';
+import { View, Text, TextInput, Button, StyleSheet, Alert } from 'react-native';
 import { POIContext } from '../SharedContext/TaskContext';
+import Geolocation from 'react-native-geolocation-service';
+import * as Location from 'expo-location';
+
+
 
 export default function AddTaskScreen({ navigation }) {
   const [name, setName] = useState('');
@@ -8,20 +12,56 @@ export default function AddTaskScreen({ navigation }) {
   const [task, setTask] = useState('');
   const [tags, setTags] = useState('');
   const [rating, setRating] = useState('');
+  const [currentLocation, setCurrentLocation] = useState(null);
+
 
   const { addPOI } = useContext(POIContext);
 
+  // Fetch the user's current location when the component mounts
+  useEffect(() => {
+    const fetchLocation = async () => {
+      try {
+        const { status } = await Location.requestForegroundPermissionsAsync();
+        if (status !== 'granted') {
+          Alert.alert('Permission Denied', 'Location permissions are required to get the current location.');
+          return;
+        }
+
+        const location = await Location.getCurrentPositionAsync({});
+        setCurrentLocation({
+          latitude: location.coords.latitude,
+          longitude: location.coords.longitude,
+        });
+        console.log('Current Location:', location.coords);
+      } catch (error) {
+        Alert.alert('Error', 'Failed to fetch location. Ensure location services are enabled.');
+        console.error(error);
+      }
+    };
+
+    fetchLocation();
+  }, []);
 
   const handleAddPOI = () => {
+
+    if (!currentLocation) {
+      Alert.alert('Error', 'Location not available. Please try again.');
+      return;
+    }
+
     const newPOI = {
       id: Date.now().toString(), // Mock unique ID
       name,
       address,
       task,
       tags: tags.split(',').map(tag => tag.trim()),
-      latitude: 0, // Placeholder (use real data)
-      longitude: 0, // Placeholder (use real data)
+      latitude: currentLocation.latitude,
+      longitude: currentLocation.longitude,
+      rating: parseFloat(rating) || 0, // Default rating to 0 if not provided
+
     };
+
+    
 
     console.log('New POI:', newPOI); // Replace with actual state or database update logic
     addPOI(newPOI);

@@ -50,6 +50,14 @@ const handleDeletePOI = () => {
           // onPress={() => handleDeletePOI(poi.id)}
         />
 
+      <View style={styles.buttonContainer}>
+
+        <Button
+          title="View on Map"
+          onPress={() => navigation.navigate('Maps', { poi })} // Pass POI to MapScreen
+        />
+      </View>
+
       <Button title="Back to List" onPress={() => navigation.goBack()} />
 
         
@@ -79,4 +87,6 @@ const styles = StyleSheet.create({
     marginTop: 4,
     color: '#555',
   },
+  buttonContainer: { marginTop: 16 },
+
 });

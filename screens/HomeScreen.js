@@ -22,7 +22,7 @@ export default function HomeScreen({ navigation }) {
     </TouchableOpacity>
   );
 
-  console.log('Navigation State:', navigation.getState());
+  // console.log('Navigation State:', navigation.getState());
 
   return (
     <View style={styles.container}>

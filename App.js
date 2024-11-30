@@ -7,6 +7,7 @@ import AddTaskScreen from './components/Operations/AddTaskScreen';
 import { POIProvider } from './components/SharedContext/TaskContext';
 import DetailScreen from './screens/DetailScreen';
 import EditTaskScreen from './components/Operations/EditTaskScreen';
+import Maps from './screens/Maps/Maps';
 
 
 const Stack = createStackNavigator(); // Create a Object which helps to navigate between screen
@@ -44,6 +45,8 @@ export default function App() {
 
 
           <Stack.Screen name="Detail" component={DetailScreen} />
+
+          <Stack.Screen name="Maps" component={Maps} />
       
         </Stack.Navigator>
 
