@@ -21,6 +21,7 @@ const handleDeletePOI = () => {
         {
           text: 'Delete',
           onPress: () => {
+
             deletePOI(poi.id); // call the deletePOI from context
             // setPOIs((prevPOIs) => prevPOIs.filter((item) => item.id !== poi.id)); // Remove POI
             navigation.goBack(); // Return to Home Screen
@@ -32,6 +33,7 @@ const handleDeletePOI = () => {
 
   return (
     <View style={styles.container}>
+
       <Text style={styles.title}>{poi.name}</Text>
       <Text style={styles.label}>Address:</Text>
       <Text style={styles.text}>{poi.address}</Text>
@@ -39,26 +41,54 @@ const handleDeletePOI = () => {
       <Text style={styles.text}>{poi.task}</Text>
       <Text style={styles.label}>Tags:</Text>
       <Text style={styles.text}>{poi.tags.join(', ')}</Text>
-      <Text style={styles.label}>Rating:</Text>
-
-      <Button title="Edit POI" onPress={() => navigation.navigate('EditTask', { poi })} />
-
-      <Button
-          title="Delete POI"
-          color="red"
-          onPress={handleDeletePOI}
-          // onPress={() => handleDeletePOI(poi.id)}
-        />
+      <Text style={styles.label}>Ratings: </Text>
+      <Text style={styles.text}>{poi.rating}</Text>
 
       <View style={styles.buttonContainer}>
 
-        <Button
-          title="View on Map"
-          onPress={() => navigation.navigate('Maps', { poi })} // Pass POI to MapScreen
-        />
+        <View style={[styles.button]}>
+          <Button 
+              title="Edit POI" 
+              // color="#28a745" 
+              onPress={() => navigation.navigate('EditTask', { poi })} 
+          />
+        </View>
+
+        <View style={[styles.button]}>
+          <Button
+              title="Delete POI"
+              color="red"
+              onPress={handleDeletePOI}
+              // onPress={() => handleDeletePOI(poi.id)}
+          />
+        </View>
+
+        <View style={[styles.button]}>
+          <Button
+              title="View on Map"
+              color="#17a2b8"
+              onPress={() => navigation.navigate('Maps', { poi })} // Pass POI to MapScreen
+          />
+        </View>
+
+
+        <View style={[styles.button]}>
+          <Button
+            title="Track Location"
+            color="#6c757d"
+            onPress={() => navigation.navigate('POITracker', { poi })}
+          />
+        </View>
+
+
+        <View style={[styles.button]}>
+          <Button title="Back to List" onPress={() => navigation.goBack()} />
+        </View>
+
+
+
       </View>
 
-      <Button title="Back to List" onPress={() => navigation.goBack()} />
 
         
     </View>
@@ -66,27 +96,45 @@ const handleDeletePOI = () => {
 }
 
 const styles = StyleSheet.create({
+
   container: {
     flex: 1,
     padding: 16,
     backgroundColor: '#fff',
   },
+
   title: {
     fontSize: 24,
     fontWeight: 'bold',
-    marginBottom: 16,
+    marginBottom: 10,
     textAlign: 'center',
   },
+
   label: {
     fontSize: 16,
     fontWeight: 'bold',
     marginTop: 16,
+    marginBottom: 10,
   },
+
   text: {
     fontSize: 16,
     marginTop: 4,
     color: '#555',
   },
-  buttonContainer: { marginTop: 16 },
+
+  button: {
+    width: '100%',
+    marginVertical: 4, // Space between buttons
+    backgroundColor: '#007bff', // Blue button color
+    borderRadius: 8,
+    padding: 10,
+  },
+
+  buttonContainer: {
+    flex: 2,
+    justifyContent: 'center',
+    alignItems: 'center', // Center buttons horizontally
+  },
 
 });

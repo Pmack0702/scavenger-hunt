@@ -78,6 +78,7 @@ export default function AddTaskScreen({ navigation }) {
         value={name}
         onChangeText={setName}
         placeholder="Enter POI Name"
+        requried
       />
 
       <Text style={styles.label}>Address:</Text>
@@ -96,14 +97,15 @@ export default function AddTaskScreen({ navigation }) {
         placeholder="Enter Task Instructions"
       />
 
-      <Text style={styles.label}>Tags (comma-separated):</Text>
+      <Text style={styles.label}>Tags: </Text>
       <TextInput
         style={styles.input}
         value={tags}
         onChangeText={setTags}
-        placeholder="e.g., Outdoor, Easy"
+        placeholder="e.g., Easy"
       />
 
+    <Text style={styles.label}>Ratings: </Text>
     <TextInput
         style={styles.input}
         placeholder="Enter Rating"
