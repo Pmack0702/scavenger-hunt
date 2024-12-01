@@ -2,7 +2,7 @@ import { StyleSheet, Text, View } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import SplashScreen from './screens/SplashScreen';
-import HomeScreen from './screens/HomeScreen';
+import HomeScreen from './screens/HomePage/HomeScreen';
 import AddTaskScreen from './components/Operations/AddTaskScreen'; 
 import { POIProvider } from './components/SharedContext/TaskContext';
 import DetailScreen from './screens/DetailScreen';
@@ -10,6 +10,7 @@ import EditTaskScreen from './components/Operations/EditTaskScreen';
 import Maps from './screens/Maps/Maps';
 import POITracker from './components/Navigation/POITracker';
 import ContactScreen from './screens/Contacts/ContactScreen';
+import Leaderboard from './screens/HomePage/LeaderBoard';
 
 
 const Stack = createStackNavigator(); // Create a Object which helps to navigate between screen
@@ -53,6 +54,8 @@ export default function App() {
           <Stack.Screen name='POITracker' component={POITracker}/>
 
           <Stack.Screen name='Contact' component={ContactScreen} />
+
+          <Stack.Screen name='LeaderBoard' component={Leaderboard} />
       
         </Stack.Navigator>
 
