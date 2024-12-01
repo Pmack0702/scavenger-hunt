@@ -80,6 +80,9 @@ const handleDeletePOI = () => {
           />
         </View>
 
+        <View style={[styles.button]}>
+          <Button title="Contact" onPress={() => navigation.navigate('Contact', { poi })} />
+        </View>
 
         <View style={[styles.button]}>
           <Button title="Back to List" onPress={() => navigation.goBack()} />

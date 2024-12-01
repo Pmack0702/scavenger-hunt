@@ -9,6 +9,7 @@ import DetailScreen from './screens/DetailScreen';
 import EditTaskScreen from './components/Operations/EditTaskScreen';
 import Maps from './screens/Maps/Maps';
 import POITracker from './components/Navigation/POITracker';
+import ContactScreen from './screens/Contacts/ContactScreen';
 
 
 const Stack = createStackNavigator(); // Create a Object which helps to navigate between screen
@@ -50,6 +51,8 @@ export default function App() {
           <Stack.Screen name="Maps" component={Maps} />
 
           <Stack.Screen name='POITracker' component={POITracker}/>
+
+          <Stack.Screen name='Contact' component={ContactScreen} />
       
         </Stack.Navigator>
 
