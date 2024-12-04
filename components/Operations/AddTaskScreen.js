@@ -3,6 +3,7 @@ import { View, Text, TextInput, Button, StyleSheet, Alert } from 'react-native';
 import { POIContext } from '../SharedContext/TaskContext';
 import Geolocation from 'react-native-geolocation-service';
 import * as Location from 'expo-location';
+import apiClient from '../../components/apiClient/api'
 
 
 
@@ -16,6 +17,8 @@ export default function AddTaskScreen({ navigation }) {
 
 
   const { addPOI } = useContext(POIContext);
+  const { refreshPOIs } = useContext(POIContext);
+
 
   // Fetch the user's current location when the component mounts
   useEffect(() => {
@@ -42,7 +45,7 @@ export default function AddTaskScreen({ navigation }) {
     fetchLocation();
   }, []);
 
-  const handleAddPOI = () => {
+  const handleAddPOI = async () => {
 
     if (!currentLocation) {
       Alert.alert('Error', 'Location not available. Please try again.');
@@ -61,11 +64,32 @@ export default function AddTaskScreen({ navigation }) {
 
     };
 
-    
+    try {
+      
+      // axios to make a POST request
+      const response = await apiClient.post('/pois', newPOI)
+      console.log("POI added: ", response.data);
 
-    console.log('New POI:', newPOI); // Replace with actual state or database update logic
-    addPOI(newPOI);
+      refreshPOIs();
+     
+      // addPOI(newPOI);
+      console.log('New POI:', newPOI); // Replace with actual state or database update logic
+
+
+      // setting the state empty after adding
+      setName("");
+      setAddress("");
+      setTask("");
+      setTags("");
+      setRating("");
+      setCurrentLocation("");
+
+    } catch (error) {
+      console.log("Error", error.message)
+      
+  }
     navigation.goBack(); // Return to HomeScreen
+
   };
 
 

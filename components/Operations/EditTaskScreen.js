@@ -1,6 +1,7 @@
 import React, { useContext, useState } from 'react';
 import { POIContext } from '../SharedContext/TaskContext';
 import { View, Text, TextInput, Button, StyleSheet } from 'react-native';
+import apiClient from '../apiClient/api'
 
 
 export default function EditTaskScreen({ route, navigation }) {
@@ -24,10 +25,12 @@ export default function EditTaskScreen({ route, navigation }) {
         task,
         tags: tags.split(',').map(tag => tag.trim()),
       };
+
   
       console.log('POI Updated:', updatedPOI);
       editPOI(updatedPOI);
       navigation.navigate('HomeScreen'); // Return to the previous screen
+
     };
   
     return (
@@ -49,7 +52,8 @@ export default function EditTaskScreen({ route, navigation }) {
     );
   }
 
-  const styles = StyleSheet.create({
+const styles = StyleSheet.create({
+
     container: {
       flex: 1,
       padding: 16,
@@ -82,5 +86,5 @@ export default function EditTaskScreen({ route, navigation }) {
       textAlign: 'center',
       fontWeight: 'bold',
     },
-  });
+});
   

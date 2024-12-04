@@ -2,34 +2,62 @@ import React, { useContext } from 'react';
 import { View, Text, StyleSheet, Button } from 'react-native';
 import { Alert } from 'react-native';
 import { POIContext } from '../components/SharedContext/TaskContext';
+import apiClient from '../components/apiClient/api'
 
 
 export default function DetailScreen({ route, navigation }) {
+  
     // const { poi, setPOIs } = route.params; // Retrieve poi and setPOIs from navigation params
 
   const { poi, setPOIs } = route.params; // Extract the POI object passed via navigation
 
   const { deletePOI } = useContext(POIContext); // Access the DELETEPOI from POIContext
+  
+  // const deletePOI = (id) => {
+  //   try {
+  //     const response = apiClient.delete(`/pois/${id}`)
+  //     console.log(response.data)
+  //     // setPois((prevPois) => prevPois.filter((poi) => poi.id !== id));
 
-const handleDeletePOI = () => {
+  //   } catch (error) {
+  //     console.error('Error Deleting POIs:', error);
 
-    Alert.alert(
-      'Confirm Deletion',
-      'Are you sure you want to delete this POI?',
-      [
-        { text: 'Cancel', style: 'cancel' },
-        {
-          text: 'Delete',
-          onPress: () => {
+      
+  //   }
+  // }
+  
+  console.log('Received POI in DetailScreen:', poi); // Debug POI
 
-            deletePOI(poi.id); // call the deletePOI from context
-            // setPOIs((prevPOIs) => prevPOIs.filter((item) => item.id !== poi.id)); // Remove POI
-            navigation.goBack(); // Return to Home Screen
+  
+
+  const handleDeletePOI = () => {
+
+    console.log('Deleting POI with ID:', poi._id); // Debugging log
+
+      Alert.alert(
+        'Confirm Deletion',
+        'Are you sure you want to delete this POI?',
+        [
+          { text: 'Cancel', style: 'cancel' },
+          {
+            text: 'Delete',
+            onPress: async () => {
+              // deletePOI();
+
+              try {
+                await deletePOI(poi._id); // Ensure `poi.id` exists
+                navigation.goBack(); // Return to Home Screen
+                
+              } catch (error) {
+                console.error('Error during deletion:', error);
+              }
+            },
           },
-        },
-      ]
-    );
-  };
+        ]
+      );
+    };
+
+    
 
   return (
     <View style={styles.container}>
