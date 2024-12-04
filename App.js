@@ -11,6 +11,9 @@ import Maps from './screens/Maps/Maps';
 import POITracker from './components/Navigation/POITracker';
 import ContactScreen from './screens/Contacts/ContactScreen';
 import Leaderboard from './screens/HomePage/LeaderBoard';
+import TeamScreen from './screens/Teams/TeamScreen';
+import { TeamProvider } from './components/SharedContext/TeamContext';
+import AddMember from './screens/Teams/Members/TeamMemberScreen';
 
 
 const Stack = createStackNavigator(); // Create a Object which helps to navigate between screen
@@ -31,35 +34,43 @@ export default function App() {
 
     <POIProvider>
 
-      <NavigationContainer>
+      <TeamProvider>
 
-        <Stack.Navigator initialRouteName="Splash" >
+        <NavigationContainer>
 
-          <Stack.Screen
-              name="Splash"
-              component={SplashScreen}
-              options={{ headerShown: false }}
-          /> 
+          <Stack.Navigator initialRouteName="Splash" >
 
-          <Stack.Screen name='HomeScreen' component={HomeScreen} /> 
+            <Stack.Screen
+                name="Splash"
+                component={SplashScreen}
+                options={{ headerShown: false }}
+            /> 
 
-          <Stack.Screen name="AddTask" component={AddTaskScreen} /> 
-          <Stack.Screen name="EditTask" component={EditTaskScreen} /> 
+            <Stack.Screen name='HomeScreen' component={HomeScreen} /> 
+
+            <Stack.Screen name="AddTask" component={AddTaskScreen} /> 
+            <Stack.Screen name="EditTask" component={EditTaskScreen} /> 
 
 
-          <Stack.Screen name="Detail" component={DetailScreen} />
+            <Stack.Screen name="Detail" component={DetailScreen} />
 
-          <Stack.Screen name="Maps" component={Maps} />
+            <Stack.Screen name="Maps" component={Maps} />
 
-          <Stack.Screen name='POITracker' component={POITracker}/>
+            <Stack.Screen name='POITracker' component={POITracker}/>
 
-          <Stack.Screen name='Contact' component={ContactScreen} />
+            <Stack.Screen name='Contact' component={ContactScreen} />
 
-          <Stack.Screen name='LeaderBoard' component={Leaderboard} />
-      
-        </Stack.Navigator>
+            <Stack.Screen name='LeaderBoard' component={Leaderboard} />
 
-      </NavigationContainer>
+            <Stack.Screen name = 'Team' component={TeamScreen} />
+
+            <Stack.Screen name = 'AddMember' component={AddMember} />
+        
+          </Stack.Navigator>
+
+        </NavigationContainer>
+      </TeamProvider>
+
 
     </POIProvider>
     

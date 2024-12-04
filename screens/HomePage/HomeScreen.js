@@ -18,43 +18,33 @@ export default function HomeScreen({ navigation }) {
           refreshPOIs();
         }, [])
       );
-
-
-    // UseEffect Hook to fetch all the POIS from the Database
-    // useEffect(() => {
-
-    //   const fetchPOIs = async () => {
-        
-    //     try {
-
-    //       // Axios is used here to maek a HTTP request which return a promise
-    //       const response = await apiClient.get('/pois');
-    //       console.log(response.data)
-    //       setpoislist(response.data) // Update the state
-          
-    //     } catch (error) {
-    //       console.log("error:", error)
-          
-    //     }
-    //   }
-
-
-    //   fetchPOIs()
-    // }, [navigation])
-
     
-    React.useLayoutEffect(() => {
-      navigation.setOptions({
-        headerRight: () => (
-          <TouchableOpacity
-            onPress={() => navigation.navigate('LeaderBoard')}
-            style={styles.iconContainer}
-          >
-            <Icon name="bell" size={24} color="#000" />
-          </TouchableOpacity>
-        ),
-      });
-    }, [navigation]);
+    // React.useLayoutEffect(() => {
+    //   navigation.setOptions({
+    //     headerRight: () => (
+    //       <TouchableOpacity
+    //         onPress={() => navigation.navigate('LeaderBoard')}
+    //         style={styles.iconContainer}
+    //       >
+    //         <Icon name="bell" size={24} color="#000" />
+    //       </TouchableOpacity>
+    //     ),
+    //   });
+    // }, [navigation]);
+
+      // Set up the team icon in the header
+      React.useLayoutEffect(() => {
+        navigation.setOptions({
+          headerRight: () => (
+            <TouchableOpacity
+              onPress={() => navigation.navigate('Team')} // Navigate to TeamScreen when clicked
+              style={styles.iconContainer}
+            >
+              <Icon name="users" size={24} color="#000" /> {/* Using the 'users' icon for teams */}
+            </TouchableOpacity>
+          ),
+        });
+      }, [navigation]);
   
 
 
@@ -70,11 +60,6 @@ export default function HomeScreen({ navigation }) {
       </Text>
     </TouchableOpacity>
   );
-
-  // Check if pois is correctly populated and log it
-  // console.log("POIs Data:", pois);
-
-  // console.log('Navigation State:', navigation.getState());
 
   return (
     <View style={styles.container}>

@@ -77,6 +77,7 @@ export default function AddTaskScreen({ navigation }) {
 
 
       // setting the state empty after adding
+      
       setName("");
       setAddress("");
       setTask("");
