@@ -23,6 +23,8 @@ export default function TeamScreen({ navigation }) {
         const newTeam = { name: teamName, members: [] }; // Example new team structure
         console.log('Before adding team:', teams); // Log before adding
         await addTeam(newTeam);
+        fetchTeams();
+        setTeamName('')
         console.log('After adding team:', teams); // Log after adding
         
 
@@ -51,9 +53,9 @@ export default function TeamScreen({ navigation }) {
     //     </TouchableOpacity>
     // );
 
-    useEffect(() => {
-        console.log('Teams updated:', teams);
-    }, [teams]);  // This will log when teams is updated
+    // useEffect(() => {
+    //     console.log('Teams updated:', teams);
+    // }, [teams]);  // This will log when teams is updated
     
     
 

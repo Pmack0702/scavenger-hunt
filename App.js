@@ -14,6 +14,7 @@ import Leaderboard from './screens/HomePage/LeaderBoard';
 import TeamScreen from './screens/Teams/TeamScreen';
 import { TeamProvider } from './components/SharedContext/TeamContext';
 import AddMember from './screens/Teams/Members/TeamMemberScreen';
+import SelectTeam from './screens/Teams/SelectTeam'
 
 
 const Stack = createStackNavigator(); // Create a Object which helps to navigate between screen
@@ -65,6 +66,8 @@ export default function App() {
             <Stack.Screen name = 'Team' component={TeamScreen} />
 
             <Stack.Screen name = 'AddMember' component={AddMember} />
+
+            <Stack.Screen name = 'SelectTeam' component={SelectTeam} />
         
           </Stack.Navigator>
 

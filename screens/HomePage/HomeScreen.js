@@ -68,6 +68,10 @@ export default function HomeScreen({ navigation }) {
           title="Add POI"
           onPress={() => navigation.navigate('AddTask')}        
       /> 
+      <Button
+          title="LeaderBoard"
+          onPress={() => navigation.navigate('LeaderBoard')}        
+      /> 
       <FlatList
         data={pois}
         keyExtractor={(item) => item.id}

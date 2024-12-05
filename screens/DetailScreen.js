@@ -1,7 +1,9 @@
-import React, { useContext } from 'react';
-import { View, Text, StyleSheet, Button } from 'react-native';
+import React, { useState, useContext, useEffect } from 'react';
+import { Modal, View, Text, StyleSheet, Button, FlatList } from 'react-native';
 import { Alert } from 'react-native';
 import { POIContext } from '../components/SharedContext/TaskContext';
+import { TeamContext } from '../components/SharedContext/TeamContext';
+
 import apiClient from '../components/apiClient/api'
 
 
@@ -12,19 +14,46 @@ export default function DetailScreen({ route, navigation }) {
   const { poi, setPOIs } = route.params; // Extract the POI object passed via navigation
 
   const { deletePOI } = useContext(POIContext); // Access the DELETEPOI from POIContext
+  const { teams } = useContext(TeamContext); // Access available teams from TeamContext
+  console.log("Teams receive from detailscrren" ,teams)
+  console.log('Teams from Detail:', teams); // Log to debug
+
+
+  const [isModalVisible, setIsModalVisible] = useState(false); // State to toggle modal visibility
+  const [selectedTeam, setSelectedTeam] = useState(null); // State to store selected team
+
+  // useEffect(() => {
+  //   console.log('Updated selectedTeam:', selectedTeam);
+  // }, [selectedTeam]);
   
-  // const deletePOI = (id) => {
-  //   try {
-  //     const response = apiClient.delete(`/pois/${id}`)
-  //     console.log(response.data)
-  //     // setPois((prevPois) => prevPois.filter((poi) => poi.id !== id));
+  
+  // Handle selecting a team for the POI
+  const handleSelectTeam = async (teamId) => {
+    try {
+      const response = await apiClient.put(`/pois/${poi._id}/team`, { teamId });
+      if (response.status === 200) {
+        console.log('Selected Team:', teamId);
+        setSelectedTeam(teamId); // Set selected team ID
+        Alert.alert('Success', 'Team has been linked to the POI!');
+      } else {
+        console.error('Error linking team to POI:', response.data.message);
+      }
+    } catch (error) {
+      console.error('Error linking team:', error);
+      Alert.alert('Error', 'There was an issue linking the team to the POI.');
+    }
+  };
+  
 
-  //   } catch (error) {
-  //     console.error('Error Deleting POIs:', error);
-
-      
-  //   }
-  // }
+  
+  // Render team list item
+  const renderTeamItem = ({ item }) => (
+    <TouchableOpacity onPress={() => handleSelectTeam(item._id)}>
+      <View style={styles.teamItem}>
+        <Text style={styles.teamName}>{item.name}</Text>
+      </View>
+    </TouchableOpacity>
+  );
   
   console.log('Received POI in DetailScreen:', poi); // Debug POI
 
@@ -57,6 +86,11 @@ export default function DetailScreen({ route, navigation }) {
       );
     };
 
+    // useEffect(() => {
+    //   console.log('Received POI:', poi);
+    //   console.log('Received Team:', teams);
+    // }, []);
+    
     
 
   return (
@@ -74,13 +108,19 @@ export default function DetailScreen({ route, navigation }) {
 
       <View style={styles.buttonContainer}>
 
-        <View style={[styles.button]}>
+        <View style={styles.button}>
+          <Button
+            title="Select Team"
+            onPress={() => navigation.navigate('SelectTeam', { poi, team: selectedTeam })}           />
+        </View>
+
+        {/* <View style={[styles.button]}>
           <Button 
               title="Edit POI" 
               // color="#28a745" 
               onPress={() => navigation.navigate('EditTask', { poi })} 
           />
-        </View>
+        </View> */}
 
         <View style={[styles.button]}>
           <Button
@@ -101,20 +141,47 @@ export default function DetailScreen({ route, navigation }) {
 
 
         <View style={[styles.button]}>
-          <Button
-            title="Track Location"
-            color="#6c757d"
-            onPress={() => navigation.navigate('POITracker', { poi })}
-          />
+        <Button
+          title="Track Location"
+          color="#6c757d"
+          onPress={() => {
+            if (selectedTeam) {
+              console.log('Navigating to POITracker with:', { poi, team: selectedTeam });
+              navigation.navigate('POITracker', { poi, team: selectedTeam });
+            } else {
+              console.log("TroubleSHoot")
+              Alert.alert('No Team Selected', 'Please select a team before tracking the location.');
+            }
+          }}
+        />
         </View>
 
-        <View style={[styles.button]}>
+        {/* <View style={[styles.button]}>
           <Button title="Contact" onPress={() => navigation.navigate('Contact', { poi })} />
-        </View>
+        </View> */}
 
         <View style={[styles.button]}>
           <Button title="Back to List" onPress={() => navigation.goBack()} />
         </View>
+
+      {/* Modal for Team Selection */}
+      {/* <Modal
+        animationType="slide"
+        transparent={true}
+        visible={isModalVisible}
+        onRequestClose={() => setIsModalVisible(false)}>
+        <View style={styles.modalContainer}>
+          <View style={styles.modalContent}>
+            <Text style={styles.modalTitle}>Select a Team</Text>
+            <FlatList
+            data={teams && teams.length > 0 ? teams : []} // Check if teams are available and have data
+            keyExtractor={(item) => item._id.toString()}  // Ensure teams have _id property
+            renderItem={renderTeamItem}  // Render each team item
+          />
+            <Button title="Close" onPress={() => setIsModalVisible(false)} />
+          </View>
+        </View>
+      </Modal> */}
 
 
 
@@ -166,6 +233,32 @@ const styles = StyleSheet.create({
     flex: 2,
     justifyContent: 'center',
     alignItems: 'center', // Center buttons horizontally
+  },
+  modalContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+  },
+  modalContent: {
+    width: '80%',
+    backgroundColor: '#fff',
+    padding: 20,
+    borderRadius: 10,
+    alignItems: 'center',
+  },
+  modalTitle: {
+    fontSize: 18,
+    fontWeight: 'bold',
+    marginBottom: 20,
+  },
+  teamItem: {
+    padding: 10,
+    borderBottomWidth: 1,
+    borderBottomColor: '#ccc',
+  },
+  teamName: {
+    fontSize: 16,
   },
 
 });

@@ -22,6 +22,7 @@ export default function AddMemberScreen({ route, navigation }) {
     try {
         await addMember(team._id, newMember); // Add member to context and API
         console.log("added successfully")
+        
         setMembers(''); // Clear input field
     } catch (error) {
         console.error('Error adding member to team:', error);  // Log the error
