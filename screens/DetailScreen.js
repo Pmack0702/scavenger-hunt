@@ -11,7 +11,7 @@ export default function DetailScreen({ route, navigation }) {
   
     // const { poi, setPOIs } = route.params; // Retrieve poi and setPOIs from navigation params
 
-  const { poi, setPOIs } = route.params; // Extract the POI object passed via navigation
+    const { poi, setPOIs, selectedTeam } = route.params || {};
 
   const { deletePOI } = useContext(POIContext); // Access the DELETEPOI from POIContext
   const { teams } = useContext(TeamContext); // Access available teams from TeamContext
@@ -20,11 +20,24 @@ export default function DetailScreen({ route, navigation }) {
 
 
   const [isModalVisible, setIsModalVisible] = useState(false); // State to toggle modal visibility
-  const [selectedTeam, setSelectedTeam] = useState(null); // State to store selected team
+  // const [selectedTeam, setSelectedTeam] = useState(null); // State to store selected team
+  const [currentSelectedTeam, setCurrentSelectedTeam] = useState(selectedTeam || null); // Initialize state with selectedTeam
 
-  // useEffect(() => {
-  //   console.log('Updated selectedTeam:', selectedTeam);
-  // }, [selectedTeam]);
+  console.log("detail from selectedTeam", selectedTeam)
+
+  useEffect(() => {
+    if (selectedTeam) {
+      console.log('Selected Team Updated:', selectedTeam);
+      setCurrentSelectedTeam(selectedTeam);
+    }
+  }, [selectedTeam]);
+  
+  
+  if (!poi) {
+    Alert.alert('Error', 'POI data is missing. Returning to the previous screen.');
+    navigation.goBack();
+    return null;
+  }
   
   
   // Handle selecting a team for the POI
@@ -32,8 +45,10 @@ export default function DetailScreen({ route, navigation }) {
     try {
       const response = await apiClient.put(`/pois/${poi._id}/team`, { teamId });
       if (response.status === 200) {
-        console.log('Selected Team:', teamId);
-        setSelectedTeam(teamId); // Set selected team ID
+        console.log('selectTeam Team:', teamId);
+        const selectedTeam = teams.find((team) => team._id === teamId); // Get full team object
+        navigation.navigate('Detail', { poi, selectedTeam }); // Navigate back with selected team
+
         Alert.alert('Success', 'Team has been linked to the POI!');
       } else {
         console.error('Error linking team to POI:', response.data.message);
@@ -86,12 +101,20 @@ export default function DetailScreen({ route, navigation }) {
       );
     };
 
-    // useEffect(() => {
-    //   console.log('Received POI:', poi);
-    //   console.log('Received Team:', teams);
-    // }, []);
+
     
     
+    const handleTrackLocation = () => {
+      if (currentSelectedTeam) {
+        
+        console.log('Navigating to POITracker with:', { poi, team: currentSelectedTeam });
+        navigation.navigate('POITracker', { poi, team: currentSelectedTeam });
+
+      } else {
+        console.log("No Team Selected")
+        Alert.alert('No Team Selected', 'Please select a team before tracking the location.');
+      }
+    };
 
   return (
     <View style={styles.container}>
@@ -144,15 +167,16 @@ export default function DetailScreen({ route, navigation }) {
         <Button
           title="Track Location"
           color="#6c757d"
-          onPress={() => {
-            if (selectedTeam) {
-              console.log('Navigating to POITracker with:', { poi, team: selectedTeam });
-              navigation.navigate('POITracker', { poi, team: selectedTeam });
-            } else {
-              console.log("TroubleSHoot")
-              Alert.alert('No Team Selected', 'Please select a team before tracking the location.');
-            }
-          }}
+          onPress={handleTrackLocation}
+          // onPress={() => {
+          //   if (selectTeam) {
+          //     console.log('Navigating to POITracker with:', { poi, team: selectTeam });
+          //     navigation.navigate('POITracker', { poi, team: selectTeam });
+          //   } else {
+          //     console.log("TroubleSHoot")
+          //     Alert.alert('No Team Selected', 'Please select a team before tracking the location.');
+          //   }
+          // }}
         />
         </View>
 

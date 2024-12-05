@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, FlatList, StyleSheet } from 'react-native';
+import { View, Text, FlatList, StyleSheet, Button } from 'react-native';
 import apiClient from '../../components/apiClient/api';
 
 
-export default function Leaderboard() {
+export default function Leaderboard({ navigation }) {
   const [teams, setTeams] = useState([]);
 
     // Fetch leaderboard data
@@ -37,6 +37,11 @@ export default function Leaderboard() {
         data={teams}
         keyExtractor={(item) => item.id}
         renderItem={renderTeamItem}
+      />
+
+      <Button 
+        title="Go Home"
+        onPress={() => {navigation.navigate('HomeScreen')}}
       />
     </View>
   );

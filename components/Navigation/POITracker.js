@@ -33,20 +33,7 @@ export default function POITracker({ route, navigation }) {
     fetchLocation();
   }, []);
 
-  const fetchWinningTeam = async () => {
-    try {
-      console.log("Fetching team")
-      const response = await apiClient.get(`/pois/${poi._id}/team`);
-      console.log(response.data)
-      if (response.status === 200) {
-        setWinningTeam(response.data.team[0]); // Assuming a single team is linked
-        console.log(winningTeam)
-      }
-    } catch (error) {
-      console.error('Error fetching team:', error);
-      Alert.alert('Error', 'Unable to fetch team details. Please try again.');
-    }
-  };
+
 
   const checkProximity = async () => {
     if (!currentLocation) {
@@ -63,25 +50,56 @@ export default function POITracker({ route, navigation }) {
       setHasReached(true);
       await fetchWinningTeam(); // Fetch the winning team
     } else {
-      Alert.alert('Not Yet!', `You’re ${distance} meters away.`);
+      Alert.alert('Not Yet!', `You're ${distance} meters away.`);
     }
   };
 
-  const markAsCompleted = async () => {
+  const fetchWinningTeam = async () => {
     try {
-      const response = await apiClient.put(`/pois/${poi._id}/complete`, {
-        teamId: team._id,
-        scoreIncrement: 10, // Adjust score increment as needed
-      });
+      console.log("Fetching team")
+      const response = await apiClient.get(`/pois/${poi._id}/team`);
+      console.log(response.data)
       if (response.status === 200) {
-        Alert.alert('Success', 'POI marked as completed and score updated!');
-        navigation.navigate('LeaderBoard'); // Redirect to LeaderBoard
+        console.log("Winning Team Fetched:", response.data.team[0]); // Log fetched data
+        setWinningTeam(response.data.team[0]); // Assuming a single team is linked
       }
     } catch (error) {
-      console.error('Error marking POI as completed:', error);
+      console.error('Error fetching team:', error);
+      Alert.alert('Error', 'Unable to fetch team details. Please try again.');
+    }
+  };
+  useEffect(() => {
+    console.log('Team passed to POITracker:', team);
+  }, [team]);
+
+  const markAsCompleted = async () => {
+    const teamToUse = typeof team === 'string' ? { _id: team } : team; // Resolve `team`
+    if (!teamToUse || !teamToUse._id) {
+      console.error('Team data is missing or undefined:', teamToUse);
+      Alert.alert('Error', 'Team information is required to mark POI as completed.');
+      return;
+    }
+  
+    try {
+      const payload = {
+        teamId: teamToUse._id,
+        scoreIncrement: 10,
+      };
+      console.log('Sending payload to mark POI as completed:', payload);
+  
+      const response = await apiClient.put(`/pois/${poi._id}/complete`, payload);
+      if (response.status === 200) {
+        console.log('Response from backend:', response.data);
+        Alert.alert('Success', 'POI marked as completed and score updated!');
+        navigation.navigate('LeaderBoard');
+      }
+    } catch (error) {
+      console.error('Error in markAsCompleted:', error.response?.data || error.message);
       Alert.alert('Error', 'Unable to mark POI as completed. Please try again.');
     }
   };
+  
+  
 
   return (
     <View style={styles.container}>

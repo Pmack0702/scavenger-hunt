@@ -9,15 +9,20 @@ export default function SelectTeamScreen({ route, navigation }) {
   console.log('Teams from context in SelectTeamScreen:', teams);
 
   const [selectedTeam, setSelectedTeam] = useState(null);
+  console.log("Team Selected",selectedTeam)
 
   // Handle selecting a team
   const handleSelectTeam = async (teamId) => {
     try {
       const response = await apiClient.put(`/pois/${poi._id}/team`, { teamId });
       if (response.status === 200) {
-        setSelectedTeam(teamId); // Set selected team ID
+        console.log('Team Selected:', teamId); // Log the selected team ID
+        setSelectedTeam(teamId); // Update state
         Alert.alert('Success', 'Team has been linked to the POI!');
-        navigation.goBack(); // Go back to the DetailScreen after linking
+        // navigation.goBack(); // Or use navigation.navigate if DetailScreen is accessible
+        navigation.navigate('Detail', { poi, selectedTeam: teamId }); // Pass both `poi` and `selectedTeam`
+        console.log('Navigating to DetailScreen with:', { poi, selectedTeam: teamId });
+
       } else {
         console.error('Error linking team to POI:', response.data.message);
       }
@@ -26,6 +31,7 @@ export default function SelectTeamScreen({ route, navigation }) {
       Alert.alert('Error', 'There was an issue linking the team to the POI.');
     }
   };
+  
 
   const renderTeamItem = ({ item }) => (
     <TouchableOpacity onPress={() => handleSelectTeam(item._id)}>
