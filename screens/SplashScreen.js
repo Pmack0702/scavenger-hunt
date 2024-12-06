@@ -22,7 +22,16 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
+    backgroundColor: '#282c34', // A clean background color
+  },
+  text: {
+    fontSize: 24, // Larger text size for visibility
+    fontWeight: 'bold',
+    color: '#ffffff', // White text for contrast
+    textAlign: 'center',
+    paddingHorizontal: 20, // Padding for better spacing on smaller screens
   },
 });
+
 
 export default SplashScreen;

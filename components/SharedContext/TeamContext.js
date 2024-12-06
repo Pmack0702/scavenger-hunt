@@ -8,17 +8,37 @@ export const TeamContext = createContext();
 export function TeamProvider({ children }) {
 
   const [teams, setTeams] = useState([]); // Shared team list state
+  const [ members, setMembers] = useState([]);
 
   const fetchTeams = async () => {
     try {
         const response = await apiClient.get('/teams');
-        console.log('API Response:', response.data);
         setTeams(response.data.teams);  // Set teams state
         console.log('Updated teams:', response.data.teams); // Log the updated teams state
     } catch (error) {
         console.error('Error fetching teams:', error);
     }
 };
+
+const fetchMembers = async (teamId) => {
+  console.log('Fetching members for teamId:', teamId); // Log the teamId for debugging
+  try {
+      const response = await apiClient.get(`/${teamId}/members`);
+      console.log('API Response:', response.data); // Log the entire response
+
+      // Access members from the nested response structure
+      const members = response.data?.response?.members || [];
+      console.log('Fetched members:', members);
+
+      setMembers(members); // Update the local state with the members array
+  } catch (error) {
+      console.error('Error fetching Members:', error.response?.data || error.message);
+  }
+};
+
+
+
+
 
 
   // Add a new team
@@ -99,12 +119,14 @@ export function TeamProvider({ children }) {
     <TeamContext.Provider
       value={{
         teams,
+        members,
         addTeam,
         editTeam,
         deleteTeam,
         fetchTeams,
         addMember,
         removeMember,
+        fetchMembers,
       }}
     >
       {children}

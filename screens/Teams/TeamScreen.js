@@ -31,31 +31,16 @@ export default function TeamScreen({ navigation }) {
     };
 
     const renderItem = ({ item }) => {
-        console.log(item); // Check if item contains a name
         return (
             <TouchableOpacity
                 style={styles.item}
+                
                 onPress={() => navigation.navigate('AddMember', { team: item })} // Pass team to AddMember
             >
                 <Text style={styles.teamName}>{item.name}</Text>
             </TouchableOpacity>
         );
     };
-    
-    // Navigate to AddMemberScreen with team data
-    // const handleTeamClick = (team) => {
-    //     navigation.navigate('AddMember', { team }); // Pass team as a parameter
-    // };
-
-    // const renderItem = ({ item }) => (
-    //     <TouchableOpacity onPress={() => handleTeamClick(item)} style={styles.teamItem}>
-    //         <Text style={styles.teamName}>{item.name}</Text>
-    //     </TouchableOpacity>
-    // );
-
-    // useEffect(() => {
-    //     console.log('Teams updated:', teams);
-    // }, [teams]);  // This will log when teams is updated
     
     
 
