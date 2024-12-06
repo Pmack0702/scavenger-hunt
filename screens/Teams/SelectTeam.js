@@ -59,20 +59,49 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     padding: 16,
-    backgroundColor: '#fff',
+    backgroundColor: '#f8f9fa', // Light background for a clean and modern look
   },
   title: {
-    fontSize: 24,
+    fontSize: 22,
     fontWeight: 'bold',
-    marginBottom: 20,
+    marginBottom: 16,
     textAlign: 'center',
+    color: '#343a40', // Dark gray for better visibility
   },
   teamItem: {
-    padding: 10,
-    borderBottomWidth: 1,
-    borderBottomColor: '#ccc',
+    padding: 16,
+    marginBottom: 12,
+    backgroundColor: '#ffffff', // White card-like background
+    borderRadius: 8, // Rounded corners
+    shadowColor: '#000', // Subtle shadow for elevation
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 4,
+    elevation: 2, // For Android
   },
   teamName: {
+    fontSize: 18,
+    color: '#495057', // Subtle gray for text
+    fontWeight: 'bold',
+  },
+  emptyText: {
     fontSize: 16,
+    color: '#6c757d', // Muted gray for "No teams available" text
+    textAlign: 'center',
+    marginTop: 20,
+  },
+  backButton: {
+    marginTop: 16,
+    padding: 12,
+    borderRadius: 8,
+    backgroundColor: '#007bff', // Blue button color
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  backButtonText: {
+    color: '#fff', // White text
+    fontSize: 16,
+    fontWeight: 'bold',
   },
 });
+
