@@ -14,23 +14,38 @@ export default function SelectTeamScreen({ route, navigation }) {
   // Handle selecting a team
   const handleSelectTeam = async (teamId) => {
     try {
+      // Check if the selected team is already linked to the POI
+      if (poi.team && poi.team._id === teamId) {
+        Alert.alert(
+          'Team Already Linked',
+          'This team is already linked to the current POI. Please choose another team.'
+        );
+        return; // Exit the function early
+      }
+  
+      // Proceed with linking the team
       const response = await apiClient.put(`/pois/${poi._id}/team`, { teamId });
+  
       if (response.status === 200) {
-        console.log('Team Selected:', teamId); // Log the selected team ID
-        setSelectedTeam(teamId); // Update state
+        console.log('Team linked successfully:', teamId);
+  
+        // Update state and navigate to Detail screen
+        setSelectedTeam(teamId);
+        navigation.navigate('Detail', { poi, selectedTeam: teamId });
+  
         Alert.alert('Success', 'Team has been linked to the POI!');
-        // navigation.goBack(); // Or use navigation.navigate if DetailScreen is accessible
-        navigation.navigate('Detail', { poi, selectedTeam: teamId }); // Pass both `poi` and `selectedTeam`
-        console.log('Navigating to DetailScreen with:', { poi, selectedTeam: teamId });
-
       } else {
         console.error('Error linking team to POI:', response.data.message);
       }
     } catch (error) {
       console.error('Error linking team:', error);
-      Alert.alert('Error', 'There was an issue linking the team to the POI.');
+      Alert.alert(
+        'Team Already Linked',
+        'This team is already linked to the current POI. Please choose another team.'
+      );    
     }
   };
+  
   
 
   const renderTeamItem = ({ item }) => (
@@ -50,7 +65,9 @@ export default function SelectTeamScreen({ route, navigation }) {
         renderItem={renderTeamItem}
         ListEmptyComponent={<Text>No teams available.</Text>} // If no teams, show this
       />
-      <Button title="Back to POI Details" onPress={() => navigation.goBack()} />
+      <TouchableOpacity style={styles.backButton} onPress={() => navigation.goBack()}>
+        <Text style={styles.backButtonText}>Back to POI Details</Text>
+      </TouchableOpacity>
     </View>
   );
 }
@@ -59,30 +76,30 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     padding: 16,
-    backgroundColor: '#f8f9fa', // Light background for a clean and modern look
+    backgroundColor: '#f8f9fa', // Light gray background
   },
   title: {
-    fontSize: 22,
+    fontSize: 24,
     fontWeight: 'bold',
-    marginBottom: 16,
+    marginBottom: 20,
     textAlign: 'center',
-    color: '#343a40', // Dark gray for better visibility
+    color: '#343a40', // Dark gray for better readability
   },
   teamItem: {
     padding: 16,
     marginBottom: 12,
     backgroundColor: '#ffffff', // White card-like background
-    borderRadius: 8, // Rounded corners
+    borderRadius: 10, // Smooth rounded corners
     shadowColor: '#000', // Subtle shadow for elevation
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.1,
-    shadowRadius: 4,
-    elevation: 2, // For Android
+    shadowRadius: 6,
+    elevation: 3, // Shadow for Android
   },
   teamName: {
     fontSize: 18,
     color: '#495057', // Subtle gray for text
-    fontWeight: 'bold',
+    fontWeight: '600',
   },
   emptyText: {
     fontSize: 16,
@@ -91,12 +108,11 @@ const styles = StyleSheet.create({
     marginTop: 20,
   },
   backButton: {
-    marginTop: 16,
-    padding: 12,
+    marginTop: 20,
+    paddingVertical: 12,
     borderRadius: 8,
     backgroundColor: '#007bff', // Blue button color
     alignItems: 'center',
-    justifyContent: 'center',
   },
   backButtonText: {
     color: '#fff', // White text
@@ -104,4 +120,3 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
   },
 });
-

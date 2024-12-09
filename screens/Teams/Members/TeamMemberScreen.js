@@ -91,25 +91,29 @@ console.log('Team received in AddMemberScreen:', team);
 
     const renderMember = ({ item }) => (
         <View style={styles.memberItem}>
-            <View style={styles.memberInfo}>
+            <TouchableOpacity
+                style={styles.memberInfo}
+                onPress={() => showContactOptions(item)} // Trigger the function
+            >
                 <Text style={styles.memberName}>{item.name}</Text>
                 <Text style={styles.memberContact}>{item.email}</Text>
-            </View>
+            </TouchableOpacity>
             <TouchableOpacity
                 style={styles.deleteButton}
-                onPress={() => handleDeleteMember(item._id)}
+                onPress={() => handleDeleteMember(item._id)} // Delete member
             >
                 <Text style={styles.deleteButtonText}>Delete</Text>
             </TouchableOpacity>
         </View>
     );
+    
 
     const showContactOptions = (member) => {
         Alert.alert(
             `Contact ${member.name}`,
             'Choose an option:',
             [
-                { text: 'Email', onPress: () => Communications.email([member.email], null, null, 'Subject', 'Hello!') },
+                { text: 'Email', onPress: () => Communications.email([member.email], null, null, 'Scavenger Hunt', 'Hello, Mate!!') },
                 { text: 'Cancel', style: 'cancel' },
             ]
         );

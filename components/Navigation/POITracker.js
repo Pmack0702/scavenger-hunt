@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, Alert, Button, StyleSheet } from 'react-native';
+import { View, Text, Alert, Button, StyleSheet, TouchableOpacity } from 'react-native';
 import * as Location from 'expo-location';
 import { getDistance } from 'geolib';
 import apiClient from '../apiClient/api';
@@ -117,10 +117,14 @@ export default function POITracker({ route, navigation }) {
               <Text style={styles.winnerName}>{winningTeam.name}</Text>
             </View>
           )}
-          <Button title="Mark as Completed" onPress={markAsCompleted} />
-          </View>
-      ) : (
-        <Button title="Check Proximity" onPress={checkProximity} />
+          <TouchableOpacity style={styles.button} onPress={markAsCompleted}>
+          <Text style={styles.buttonText}>Mark as Completed</Text>
+        </TouchableOpacity>
+      </View>
+    ) : (
+      <TouchableOpacity style={styles.button} onPress={checkProximity}>
+        <Text style={styles.buttonText}>Check Proximity</Text>
+      </TouchableOpacity>
       )}
     </View>
   );
@@ -129,43 +133,72 @@ export default function POITracker({ route, navigation }) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    padding: 16,
+    padding: 20,
     alignItems: 'center',
     justifyContent: 'center',
+    backgroundColor: '#f8f9fa', // Light gray for a clean look
   },
   title: {
-    fontSize: 30,
+    fontSize: 28,
     fontWeight: 'bold',
     textAlign: 'center',
-    marginBottom: 16,
+    marginBottom: 20,
+    color: '#343a40', // Dark gray for better readability
   },
   description: {
     fontSize: 16,
     textAlign: 'center',
-    marginBottom: 16,
-    color: '#555',
+    marginBottom: 20,
+    color: '#6c757d', // Muted gray for subtle text
+    lineHeight: 24, // Improved readability
+  },
+  reachedContainer: {
+    alignItems: 'center',
+    marginTop: 20,
   },
   congrats: {
-    fontSize: 18,
+    fontSize: 20,
     fontWeight: 'bold',
-    color: 'green',
+    color: '#28a745', // Green for a success message
     textAlign: 'center',
-    marginBottom: 16,
+    marginBottom: 20,
   },
   winnerContainer: {
-    marginTop: 16,
+    marginTop: 20,
     padding: 16,
-    backgroundColor: '#f9f9f9',
-    borderRadius: 8,
+    backgroundColor: '#ffffff', // White card-like background
+    borderRadius: 12, // Smooth rounded corners
+    shadowColor: '#000', // Subtle shadow for depth
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 4,
+    elevation: 3, // Shadow for Android
     alignItems: 'center',
+    width: '90%', // Adjust width for consistency
   },
   winnerTitle: {
     fontSize: 18,
     fontWeight: 'bold',
     marginBottom: 8,
+    color: '#495057', // Subtle gray for a polished look
   },
   winnerName: {
     fontSize: 16,
-    color: '#007bff',
+    color: '#007bff', // Blue for emphasis
+    fontWeight: 'bold',
+  },
+  button: {
+    marginTop: 20,
+    backgroundColor: '#007bff', // Blue for primary buttons
+    paddingVertical: 12,
+    paddingHorizontal: 24,
+    borderRadius: 8,
+    alignItems: 'center',
+  },
+  buttonText: {
+    color: '#fff', // White text for contrast
+    fontSize: 16,
+    fontWeight: 'bold',
   },
 });
+

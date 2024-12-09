@@ -1,5 +1,5 @@
 import React, { useState, useContext, useEffect } from 'react';
-import { Modal, View, Text, StyleSheet, Button, FlatList } from 'react-native';
+import { Modal, View, Text, StyleSheet, Button, FlatList, TouchableOpacity } from 'react-native';
 import { Alert } from 'react-native';
 import { POIContext } from '../components/SharedContext/TaskContext';
 import { TeamContext } from '../components/SharedContext/TeamContext';
@@ -43,19 +43,32 @@ export default function DetailScreen({ route, navigation }) {
   // Handle selecting a team for the POI
   const handleSelectTeam = async (teamId) => {
     try {
+      // Check if the selected team is already linked to the POI
+      if (poi.team && poi.team._id === teamId) {
+        Alert.alert(
+          'Team Already Linked',
+          'This team is already linked to the current POI. Please choose another team.'
+        );
+        return; // Exit early
+      }
+  
+      // Proceed with linking the team
       const response = await apiClient.put(`/pois/${poi._id}/team`, { teamId });
+  
       if (response.status === 200) {
-        console.log('selectTeam Team:', teamId);
-        const selectedTeam = teams.find((team) => team._id === teamId); // Get full team object
-        navigation.navigate('Detail', { poi, selectedTeam }); // Navigate back with selected team
-
+        console.log('Team linked successfully:', teamId);
+  
+        // Find the full team object for navigation
+        const selectedTeam = teams.find((team) => team._id === teamId);
+        navigation.navigate('Detail', { poi, selectedTeam });
+  
         Alert.alert('Success', 'Team has been linked to the POI!');
       } else {
         console.error('Error linking team to POI:', response.data.message);
       }
     } catch (error) {
       console.error('Error linking team:', error);
-      Alert.alert('Error', 'There was an issue linking the team to the POI.');
+      Alert.alert('Error', 'There was an issue linking the team to the POI. Please try again.');
     }
   };
   
@@ -106,7 +119,7 @@ export default function DetailScreen({ route, navigation }) {
     
     const handleTrackLocation = () => {
       if (currentSelectedTeam) {
-        
+
         console.log('Navigating to POITracker with:', { poi, team: currentSelectedTeam });
         navigation.navigate('POITracker', { poi, team: currentSelectedTeam });
 
@@ -115,6 +128,17 @@ export default function DetailScreen({ route, navigation }) {
         Alert.alert('No Team Selected', 'Please select a team before tracking the location.');
       }
     };
+           {/* <View style={[styles.button]}>
+          <Button 
+              title="Edit POI" 
+              // color="#28a745" 
+              onPress={() => navigation.navigate('EditTask', { poi })} 
+          />
+        </View> */}
+        
+        {/* <View style={[styles.button]}>
+          <Button title="Contact" onPress={() => navigation.navigate('Contact', { poi })} />
+        </View> */}
 
   return (
     <View style={styles.container}>
@@ -131,81 +155,27 @@ export default function DetailScreen({ route, navigation }) {
 
       <View style={styles.buttonContainer}>
 
-        <View style={styles.button}>
-          <Button
-            title="Select Team"
-            onPress={() => navigation.navigate('SelectTeam', { poi, team: selectedTeam })}           />
-        </View>
+        <TouchableOpacity style={styles.button} onPress={() => navigation.navigate('SelectTeam', { poi, team: selectedTeam })}>
+          <Text style={styles.buttonText}>Select Team</Text>
+        </TouchableOpacity>
 
-        {/* <View style={[styles.button]}>
-          <Button 
-              title="Edit POI" 
-              // color="#28a745" 
-              onPress={() => navigation.navigate('EditTask', { poi })} 
-          />
-        </View> */}
+        <TouchableOpacity style={styles.button} onPress={handleDeletePOI}>
+          <Text style={styles.buttonText}>Delete POI</Text>
+        </TouchableOpacity>
 
-        <View style={[styles.button]}>
-          <Button
-              title="Delete POI"
-              color="red"
-              onPress={handleDeletePOI}
-              // onPress={() => handleDeletePOI(poi.id)}
-          />
-        </View>
+        <TouchableOpacity style={styles.button} onPress={() => navigation.navigate('Maps', { poi })}>
+          <Text style={styles.buttonText}>View on Map</Text>
+        </TouchableOpacity>
 
-        <View style={[styles.button]}>
-          <Button
-              title="View on Map"
-              color="#17a2b8"
-              onPress={() => navigation.navigate('Maps', { poi })} // Pass POI to MapScreen
-          />
-        </View>
+        {currentSelectedTeam && (
+        <TouchableOpacity style={styles.button} onPress={handleTrackLocation}>
+          <Text style={styles.buttonText}>Track Location</Text>
+        </TouchableOpacity>
+      )}
 
-
-        <View style={[styles.button]}>
-        <Button
-          title="Track Location"
-          color="#6c757d"
-          onPress={handleTrackLocation}
-          // onPress={() => {
-          //   if (selectTeam) {
-          //     console.log('Navigating to POITracker with:', { poi, team: selectTeam });
-          //     navigation.navigate('POITracker', { poi, team: selectTeam });
-          //   } else {
-          //     console.log("TroubleSHoot")
-          //     Alert.alert('No Team Selected', 'Please select a team before tracking the location.');
-          //   }
-          // }}
-        />
-        </View>
-
-        {/* <View style={[styles.button]}>
-          <Button title="Contact" onPress={() => navigation.navigate('Contact', { poi })} />
-        </View> */}
-
-        <View style={[styles.button]}>
-          <Button title="Back to List" onPress={() => navigation.goBack()} />
-        </View>
-
-      {/* Modal for Team Selection */}
-      {/* <Modal
-        animationType="slide"
-        transparent={true}
-        visible={isModalVisible}
-        onRequestClose={() => setIsModalVisible(false)}>
-        <View style={styles.modalContainer}>
-          <View style={styles.modalContent}>
-            <Text style={styles.modalTitle}>Select a Team</Text>
-            <FlatList
-            data={teams && teams.length > 0 ? teams : []} // Check if teams are available and have data
-            keyExtractor={(item) => item._id.toString()}  // Ensure teams have _id property
-            renderItem={renderTeamItem}  // Render each team item
-          />
-            <Button title="Close" onPress={() => setIsModalVisible(false)} />
-          </View>
-        </View>
-      </Modal> */}
+        <TouchableOpacity style={styles.button} onPress={() => navigation.goBack()}>
+          <Text style={styles.buttonText}>Back to List</Text>
+        </TouchableOpacity>
 
 
 
@@ -218,71 +188,101 @@ export default function DetailScreen({ route, navigation }) {
 }
 
 const styles = StyleSheet.create({
-
   container: {
     flex: 1,
     padding: 16,
-    backgroundColor: '#fff',
+    backgroundColor: '#f8f9fa', // Light gray for a clean look
   },
 
   title: {
-    fontSize: 24,
+    fontSize: 26,
     fontWeight: 'bold',
-    marginBottom: 10,
+    marginBottom: 16,
     textAlign: 'center',
+    color: '#343a40', // Dark gray for a modern appearance
   },
 
   label: {
-    fontSize: 16,
+    fontSize: 18,
     fontWeight: 'bold',
     marginTop: 16,
-    marginBottom: 10,
+    marginBottom: 8,
+    color: '#495057', // Subtle gray for label text
   },
 
   text: {
     fontSize: 16,
     marginTop: 4,
-    color: '#555',
+    color: '#6c757d', // Light gray for additional text
+    lineHeight: 22, // Improve readability
   },
 
   button: {
-    width: '100%',
-    marginVertical: 4, // Space between buttons
-    backgroundColor: '#007bff', // Blue button color
+    width: '90%',
+    marginVertical: 8, // Space between buttons
+    backgroundColor: '#007bff', // Blue for primary buttons
     borderRadius: 8,
-    padding: 10,
+    padding: 12,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 4,
+    elevation: 3, // Shadow for Android
+  },
+
+  buttonText: {
+    fontSize: 16,
+    fontWeight: 'bold',
+    color: '#fff', // White text for contrast
+    textAlign: 'center',
   },
 
   buttonContainer: {
-    flex: 2,
+    flex: 1,
     justifyContent: 'center',
     alignItems: 'center', // Center buttons horizontally
+    marginTop: 20, // Push buttons below the content
   },
+
   modalContainer: {
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: 'rgba(0, 0, 0, 0.5)',
-  },
-  modalContent: {
-    width: '80%',
-    backgroundColor: '#fff',
-    padding: 20,
-    borderRadius: 10,
-    alignItems: 'center',
-  },
-  modalTitle: {
-    fontSize: 18,
-    fontWeight: 'bold',
-    marginBottom: 20,
-  },
-  teamItem: {
-    padding: 10,
-    borderBottomWidth: 1,
-    borderBottomColor: '#ccc',
-  },
-  teamName: {
-    fontSize: 16,
+    backgroundColor: 'rgba(0, 0, 0, 0.5)', // Transparent overlay
   },
 
+  modalContent: {
+    width: '85%',
+    backgroundColor: '#ffffff',
+    padding: 20,
+    borderRadius: 12,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.2,
+    shadowRadius: 6,
+    elevation: 5,
+    alignItems: 'center',
+  },
+
+  modalTitle: {
+    fontSize: 20,
+    fontWeight: 'bold',
+    marginBottom: 20,
+    color: '#343a40', // Darker text for prominence
+  },
+
+  teamItem: {
+    padding: 12,
+    borderBottomWidth: 1,
+    borderBottomColor: '#e9ecef', // Subtle border for separation
+    backgroundColor: '#f8f9fa', // Light background for team items
+    borderRadius: 8,
+    marginBottom: 8,
+  },
+
+  teamName: {
+    fontSize: 18,
+    color: '#495057', // Subtle text color
+    fontWeight: 'bold',
+  },
 });

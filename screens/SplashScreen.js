@@ -5,14 +5,16 @@ import { View, Text, StyleSheet } from 'react-native';
 const SplashScreen = ({ navigation }) => {
     
     useEffect(() => {
-        setTimeout(() => {
-            navigation.replace('HomeScreen')
-        }, 2000)
+
+      setTimeout(() => {
+          navigation.replace('HomeScreen')
+      }, 2000)
+
     },[navigation])
 
   return (
     <View style={styles.container}>
-      <Text>Welcome to the Scavenger Hunt!</Text>
+      <Text style={styles.Text}>Welcome to the Scavenger Hunt!</Text>
     </View>
   );
 };
@@ -24,7 +26,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     backgroundColor: '#282c34', // A clean background color
   },
-  text: {
+  Text: {
     fontSize: 24, // Larger text size for visibility
     fontWeight: 'bold',
     color: '#ffffff', // White text for contrast
